@@ -2,9 +2,9 @@ language: c
 env:
   - BOARD=esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M
   - BOARD=esp8266:esp8266:d1_mini:CpuFrequency=80,FlashSize=4M3M
-  - PLATFORM=esp8266
 before_install:
   - IDEVER=1.8.3
+  - PLATFORM=esp8266
   - IDEDIR=arduino-${IDEVER}-${PLATFORM}
   - cd $HOME
   - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
