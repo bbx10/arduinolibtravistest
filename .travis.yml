@@ -5,7 +5,7 @@ env:
 before_install:
   - IDEVER=1.8.3
   - PLATFORM=esp8266
-  - IDEDIR=arduino-${IDEVER}-${PLATFORM}
+  - IDEDIR=${HOME}/arduino-${IDEVER}-${PLATFORM}
   - cd $HOME
   - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
   - tar xf arduino-${IDEVER}-linux64.tar.xz
