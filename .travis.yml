@@ -1,0 +1,31 @@
+language: c
+env:
+  - BOARD=esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M
+  - BOARD=esp8266:esp8266:d1_mini:CpuFrequency=80,FlashSize=4M3M
+  - PLATFORM=esp8266
+before_install:
+  - IDEVER=1.8.3
+  - IDEDIR=arduino-${IDEVER}-${PLATFORM}
+  - cd $HOME
+  - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
+  - tar xf arduino-${IDEVER}-linux64.tar.xz
+  - cd ${IDEDIR}
+  - mkdir -p portable/sketchbook/libraries
+  - ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
+  - ./arduino --pref "compiler.warning_level=all" --save-prefs
+  - ./arduino --install-boards "esp8266:esp8266"
+install:
+  - git clone https://github.com/bbx10/WebServer_tng ${IDEDIR}/portable/sketchbook/libraries/WebServer
+script:
+  - cd ${IDEDIR}/portable/sketchbook/libraries/WebServer/examples
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} HelloServer/HelloServer.ino
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} SDWebServer/SDWebServer.ino
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} SimpleAuthentification/SimpleAuthentification.ino
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} FSBrowser/FSBrowser.ino
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} WebUpdate/WebUpdate.ino
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} AdvancedWebServer/AdvancedWebServer.ino
+  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} HttpBasicAuth/HttpBasicAuth.ino
+notifications:
+  email:
+    on_success: change
+    on_failure: change
