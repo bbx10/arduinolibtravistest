@@ -9,6 +9,7 @@ before_install:
   - cd $HOME
   - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
   - tar xf arduino-${IDEVER}-linux64.tar.xz
+  - mv arduino-${IDEVER} ${IDEDIR}
   - cd ${IDEDIR}
   - mkdir -p portable/sketchbook/libraries
   - ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
