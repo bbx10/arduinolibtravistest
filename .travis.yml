@@ -1,7 +1,7 @@
 language: c
 env:
-  - BOARD=esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M
-  - BOARD=esp8266:esp8266:d1_mini:CpuFrequency=80,FlashSize=4M3M
+  - BOARD=esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M
+  - BOARD=esp8266:d1_mini:CpuFrequency=80,FlashSize=4M3M
 compiler:
   - stable
   - git
@@ -18,6 +18,7 @@ before_install:
   - |
     if [ "${CC}" == "stable" ]
     then
+      export BOARD="esp8266:${BOARD}"
       ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
       ./arduino --pref "compiler.warning_level=all" --save-prefs
       ./arduino --install-boards "esp8266:esp8266"
@@ -25,6 +26,7 @@ before_install:
   - |
     if [ "${CC}" == "git" ]
     then
+      export BOARD="esp8266com:${BOARD}"
       cd hardware
       mkdir esp8266com
       cd esp8266com
