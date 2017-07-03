@@ -2,30 +2,26 @@ language: c
 env:
   - BOARD=esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M
   - BOARD=esp8266:esp8266:d1_mini:CpuFrequency=80,FlashSize=4M3M
-  - RELEASE=stable
-  - RELEASE=git
+compiler:
+  - stable
+  - git
 before_install:
   - IDEVER=1.8.3
   - PLATFORM=esp8266
-  - IDEDIR=${HOME}/arduino-${IDEVER}-${PLATFORM}-${RELEASE}
-  - #IDEGIT=${HOME}/arduino-${IDEVER}-${PLATFORM}-git
-  - #IDESTABLE=${HOME}/arduino-${IDEVER}-${PLATFORM}-stable
+  - IDEDIR=${HOME}/arduino-${IDEVER}-${PLATFORM}-${CC}
   - cd $HOME
   - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
   - tar xf arduino-${IDEVER}-linux64.tar.xz
-  - #cp -R arduino-${IDEVER} ${IDEGIT}
-  - #mv arduino-${IDEVER} ${IDESTABLE}
   - mv arduino-${IDEVER} ${IDEDIR}
   - cd ${IDEDIR}
-  - #cd ${IDESTABLE}
   - mkdir -p portable/sketchbook/libraries
-  - if [ ${RELEASE} == "stable" ]
+  - if [ ${CC} == "stable" ]
   - then
   -   ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
   -   ./arduino --pref "compiler.warning_level=all" --save-prefs
   -   ./arduino --install-boards "esp8266:esp8266"
   - endif
-  - if [ ${RELEASE} == "git" ]
+  - if [ ${CC} == "git" ]
   - then
   -   cd hardware
   -   mkdir esp8266com
