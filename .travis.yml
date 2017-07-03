@@ -15,13 +15,13 @@ before_install:
   - mv arduino-${IDEVER} ${IDEDIR}
   - cd ${IDEDIR}
   - mkdir -p portable/sketchbook/libraries
-  - if [ ${CC} == "stable" ]
+  - if [ "${CC}" == "stable" ]
   - then
   -   ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
   -   ./arduino --pref "compiler.warning_level=all" --save-prefs
   -   ./arduino --install-boards "esp8266:esp8266"
   - endif
-  - if [ ${CC} == "git" ]
+  - if [ "${CC}" == "git" ]
   - then
   -   cd hardware
   -   mkdir esp8266com
