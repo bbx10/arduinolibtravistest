@@ -14,6 +14,7 @@ env:
 
 script:
   - echo -e "travis_fold:start:sketch_test_env_prepare"
+  - pwd
   - pip install pyserial
   - IFS='|' read -r -a array <<< "${TESTCASE}"
   - |
@@ -26,6 +27,7 @@ script:
         3) BOARD="${array[index]}" ;;
       esac
     done
+  - cd $HOME
   - wget -O arduino.tar.xz https://www.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
   - tar xf arduino.tar.xz
   - mv arduino-${IDEVER} $HOME/arduino_ide
