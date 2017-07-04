@@ -64,33 +64,17 @@ script:
   - echo -e "travis_fold:start:install_library"
   - cd $HOME/Arduino/libraries
   - git clone https://github.com/bbx10/WebServer_tng ${HOME}/Arduino/libraries/WebServer
+  - git clone https://github.com/bbx10/DNSServer_tng ${HOME}/Arduino/libraries/DNSServer
   - echo -e "travis_fold:end:install_library"
-  - echo -e "travis_fold:start:AdvancedWebServer"
-  - cd ${HOME}/Arduino/libraries/WebServer/examples
-  - arduino --verbose-build --verify --board ${BOARD} AdvancedWebServer/AdvancedWebServer.ino
-  - echo -e "travis_fold:end:AdvancedWebServer"
-  - echo -e "travis_fold:start:HelloServer"
-  - arduino --verbose-build --verify --board ${BOARD} HelloServer/HelloServer.ino
-  - echo -e "travis_fold:end:HelloServer"
-  - echo -e "travis_fold:start:HttpBasicAuth"
-  - arduino --verbose-build --verify --board ${BOARD} HttpBasicAuth/HttpBasicAuth.ino
-  - echo -e "travis_fold:end:HttpBasicAuth"
-  - echo -e "travis_fold:start:SDWebServer"
-  - arduino --verbose-build --verify --board ${BOARD} SDWebServer/SDWebServer.ino
-  - echo -e "travis_fold:end:SDWebServer"
-  - echo -e "travis_fold:start:SimpleAuthentification"
-  - arduino --verbose-build --verify --board ${BOARD} SimpleAuthentification/SimpleAuthentification.ino
-  - echo -e "travis_fold:end:SimpleAuthentification"
-  - |
-    if [[ $PLATFORM == "esp8266" ]]
-    then
-      echo -e "travis_fold:start:FSBrowser"
-      arduino --verbose-build --verify --board ${BOARD} FSBrowser/FSBrowser.ino
-      echo -e "travis_fold:end:FSBrowser"
-      echo -e "travis_fold:start:WebUpdate"
-      arduino --verbose-build --verify --board ${BOARD} WebUpdate/WebUpdate.ino
-      echo -e "travis_fold:end:WebUpdate"
-    fi
+  - echo -e "travis_fold:start:CaptivePortalAdvanced"
+  - arduino --verbose-build --verify --board  CaptivePortalAdvanced/CaptivePortalAdvanced.ino
+  - echo -e "travis_fold:end:CaptivePortalAdvanced"
+  - echo -e "travis_fold:start:CaptivePortal"
+  - arduino --verbose-build --verify --board  CaptivePortal/CaptivePortal.ino
+  - echo -e "travis_fold:end:CaptivePortal"
+  - echo -e "travis_fold:start:DNSServer"
+  - arduino --verbose-build --verify --board  DNSServer/DNSServer.ino
+  - echo -e "travis_fold:end:DNSServer"
 
 notifications:
   email:
