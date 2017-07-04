@@ -1,14 +1,22 @@
 language: c
 env:
-  - BOARD=esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M
-  - BOARD=esp8266:d1_mini:CpuFrequency=80,FlashSize=4M3M
-compiler:
-  - stable
-  - git
+  - #TESTCASE="IDEVER|PLATFORM|RELEASE|BOARD"
+  - TESTCASE="1.8.3|esp8266|stable|esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
+  - TESTCASE="1.8.3|esp8266|devel|esp8266com:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
+  - TESTCASE="1.8.3|esp32|devel|esp32:esp32:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
 before_install:
-  - IDEVER=1.8.3
-  - PLATFORM=esp8266
-  - IDEDIR=${HOME}/arduino-${IDEVER}-${PLATFORM}-${CC}
+  - IFS='|' read -r -a array <<< "${TESTCASE}"
+  - |
+    for index in "${!array[@]}"
+    do
+      case $index in
+        0) IDEVER="${array[index]}" ;;
+        1) PLATFORM="${array[index]}" ;;
+        2) RELEASE="${array[index]}" ;;
+        3) BOARD="${array[index]}" ;;
+      esac
+    done
+  - IDEDIR="${HOME}/arduino-${IDEVER}-${PLATFORM}-${RELEASE}"
   - cd $HOME
   - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
   - tar xf arduino-${IDEVER}-linux64.tar.xz
@@ -16,17 +24,15 @@ before_install:
   - cd ${IDEDIR}
   - mkdir -p portable/sketchbook/libraries
   - |
-    if [ "${CC}" == "stable" ]
+    if [[ $PLATFORM == "esp8266" ]] && [[ ${RELEASE} == "stable" ]]
     then
-      export BOARD="esp8266:${BOARD}"
       ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
       ./arduino --pref "compiler.warning_level=all" --save-prefs
       ./arduino --install-boards "esp8266:esp8266"
     fi
   - |
-    if [ "${CC}" == "git" ]
+    if [[ $PLATFORM == "esp8266" ]] && [[ ${RELEASE} == "devel" ]]
     then
-      export BOARD="esp8266com:${BOARD}"
       cd hardware
       mkdir esp8266com
       cd esp8266com
@@ -35,6 +41,18 @@ before_install:
       python get.py
       cd ${IDEDIR}
       ./arduino --pref "compiler.warning_level=all" --save-prefs
+    fi
+  - |
+    if [[ $PLATFORM == "esp32" ]] && [[ ${RELEASE} == "devel" ]]
+    then
+      mkdir -p hardware/espressif && \
+      cd hardware/espressif && \
+      git clone https://github.com/espressif/arduino-esp32.git esp32 && \
+      cd esp32/tools/ && \
+      python get.py
+      cd ${IDEDIR}
+      ./arduino --pref "compiler.warning_level=all" --save-prefs
+      ./arduino --board "espressif:esp32:esp32" --save-prefs
     fi
 install:
   - git clone https://github.com/bbx10/WebServer_tng ${IDEDIR}/portable/sketchbook/libraries/WebServer
