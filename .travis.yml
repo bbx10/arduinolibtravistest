@@ -1,9 +1,8 @@
 language: c
 env:
-  - #TESTCASE="IDEVER|PLATFORM|RELEASE|BOARD"
   - TESTCASE="1.8.3|esp8266|stable|esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
   - TESTCASE="1.8.3|esp8266|devel|esp8266com:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
-  - TESTCASE="1.8.3|esp32|devel|esp32:esp32:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
+  - TESTCASE="1.8.3|esp32|devel|espressif:esp32:esp32
 before_install:
   - IFS='|' read -r -a array <<< "${TESTCASE}"
   - |
@@ -33,9 +32,8 @@ before_install:
   - |
     if [[ $PLATFORM == "esp8266" ]] && [[ ${RELEASE} == "devel" ]]
     then
-      cd hardware
-      mkdir esp8266com
-      cd esp8266com
+      mkdir -p hardware/esp8266com
+      cd hardware/esp8266com
       git clone https://github.com/esp8266/Arduino.git esp8266
       cd esp8266/tools
       python get.py
@@ -45,14 +43,13 @@ before_install:
   - |
     if [[ $PLATFORM == "esp32" ]] && [[ ${RELEASE} == "devel" ]]
     then
-      mkdir -p hardware/espressif && \
-      cd hardware/espressif && \
-      git clone https://github.com/espressif/arduino-esp32.git esp32 && \
-      cd esp32/tools/ && \
+      mkdir -p hardware/espressif
+      cd hardware/espressif
+      git clone https://github.com/espressif/arduino-esp32.git esp32
+      cd esp32/tools/
       python get.py
       cd ${IDEDIR}
       ./arduino --pref "compiler.warning_level=all" --save-prefs
-      ./arduino --board "espressif:esp32:esp32" --save-prefs
     fi
 install:
   - git clone https://github.com/bbx10/WebServer_tng ${IDEDIR}/portable/sketchbook/libraries/WebServer
