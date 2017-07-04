@@ -67,13 +67,13 @@ script:
   - git clone https://github.com/bbx10/DNSServer_tng ${HOME}/Arduino/libraries/DNSServer
   - echo -e "travis_fold:end:install_library"
   - echo -e "travis_fold:start:CaptivePortalAdvanced"
-  - arduino --verbose-build --verify --board  CaptivePortalAdvanced/CaptivePortalAdvanced.ino
+  - arduino --verbose-build --verify --board $BOARD CaptivePortalAdvanced/CaptivePortalAdvanced.ino
   - echo -e "travis_fold:end:CaptivePortalAdvanced"
   - echo -e "travis_fold:start:CaptivePortal"
-  - arduino --verbose-build --verify --board  CaptivePortal/CaptivePortal.ino
+  - arduino --verbose-build --verify --board $BOARD CaptivePortal/CaptivePortal.ino
   - echo -e "travis_fold:end:CaptivePortal"
   - echo -e "travis_fold:start:DNSServer"
-  - arduino --verbose-build --verify --board  DNSServer/DNSServer.ino
+  - arduino --verbose-build --verify --board $BOARD DNSServer/DNSServer.ino
   - echo -e "travis_fold:end:DNSServer"
 
 notifications:
