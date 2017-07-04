@@ -83,6 +83,7 @@ script:
   - echo -e "travis_fold:end:SimpleAuthentification"
   - |
     if [[ $PLATFORM == "esp8266" ]]
+    then
       echo -e "travis_fold:start:FSBrowser"
       arduino --verbose-build --verify --board ${BOARD} FSBrowser/FSBrowser.ino
       echo -e "travis_fold:end:FSBrowser"
