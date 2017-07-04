@@ -1,72 +1,43 @@
-language: c
-sudo: required
-dist: trusty
+sudo: false
+
+language: python
+python:
+  - "2.7"
+
 os:
-    - linux
-env:
-  - TESTCASE="1.8.3|esp8266|stable|esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
-  - TESTCASE="1.8.3|esp8266|devel|esp8266com:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
-  - TESTCASE="1.8.3|esp32|devel|espressif:esp32:esp32"
-before_install:
-  - IFS='|' read -r -a array <<< "${TESTCASE}"
-  - |
-    for index in "${!array[@]}"
-    do
-      case $index in
-        0) IDEVER="${array[index]}" ;;
-        1) PLATFORM="${array[index]}" ;;
-        2) RELEASE="${array[index]}" ;;
-        3) BOARD="${array[index]}" ;;
-      esac
-    done
-  - IDEDIR="${HOME}/arduino-${IDEVER}-${PLATFORM}-${RELEASE}"
-  - cd $HOME
-  - wget http://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
-  - tar xf arduino-${IDEVER}-linux64.tar.xz
-  - mv arduino-${IDEVER} ${IDEDIR}
-  - cd ${IDEDIR}
-  - mkdir -p portable/sketchbook/libraries
-  - |
-    if [[ $PLATFORM == "esp8266" ]] && [[ ${RELEASE} == "stable" ]]
-    then
-      ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
-      ./arduino --install-boards "esp8266:esp8266"
-    fi
-  - |
-    if [[ $PLATFORM == "esp8266" ]] && [[ ${RELEASE} == "devel" ]]
-    then
-      mkdir -p hardware/esp8266com
-      cd hardware/esp8266com
-      git clone https://github.com/esp8266/Arduino.git esp8266
-      cd esp8266/tools
-      python get.py
-    fi
-  - |
-    if [[ $PLATFORM == "esp32" ]] && [[ ${RELEASE} == "devel" ]]
-    then
-      wget https://bootstrap.pypa.io/get-pip.py
-      sudo -H python get-pip.py
-      sudo -H pip install pyserial
-      mkdir -p hardware/espressif
-      cd hardware/espressif
-      git clone https://github.com/espressif/arduino-esp32.git esp32
-      cd esp32/tools/
-      python get.py
-    fi
-    cd ${IDEDIR}
-    ./arduino --pref "compiler.warning_level=all" --save-prefs
-install:
-  - git clone https://github.com/bbx10/WebServer_tng ${IDEDIR}/portable/sketchbook/libraries/WebServer
+  - linux
+
 script:
-  - cd ${IDEDIR}/portable/sketchbook/libraries/WebServer/examples
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} HelloServer/HelloServer.ino
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} SDWebServer/SDWebServer.ino
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} SimpleAuthentification/SimpleAuthentification.ino
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} FSBrowser/FSBrowser.ino
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} WebUpdate/WebUpdate.ino
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} AdvancedWebServer/AdvancedWebServer.ino
-  - ${IDEDIR}/arduino --verbose-build --verify --board ${BOARD} HttpBasicAuth/HttpBasicAuth.ino
+  - echo -e "travis_fold:start:sketch_test_env_prepare"
+  - pip install pyserial
+  - wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
+  - tar xf arduino.tar.xz
+  - mv arduino-nightly $HOME/arduino_ide
+  - mkdir -p $HOME/Arduino/libraries
+  - cd $HOME/arduino_ide/hardware
+  - mkdir espressif
+  - cd espressif
+  - git clone https://github.com/espressif/arduino-esp32.git esp32
+  - cd esp32/tools
+  - python get.py
+  - export PATH="$HOME/arduino_ide:$HOME/arduino_ide/hardware/espressif/esp32/tools/xtensa-esp32-elf/bin:$PATH"
+  - which arduino
+  - cd $HOME/Arduino/libraries
+  - git clone https://github.com/bbx10/WebServer_tng ${HOME}/Arduino/libraries/WebServer
+  - echo -e "travis_fold:end:sketch_test_env_prepare"
+  - echo -e "travis_fold:start:sketch_test"
+  - BOARD="espressif:esp32:esp32"
+  - cd ${HOME}/Arduino/libraries/WebServer/examples
+  - arduino --verbose-build --verify --board ${BOARD} HelloServer/HelloServer.ino
+  - arduino --verbose-build --verify --board ${BOARD} SDWebServer/SDWebServer.ino
+  - arduino --verbose-build --verify --board ${BOARD} SimpleAuthentification/SimpleAuthentification.ino
+  - arduino --verbose-build --verify --board ${BOARD} FSBrowser/FSBrowser.ino
+  - arduino --verbose-build --verify --board ${BOARD} WebUpdate/WebUpdate.ino
+  - arduino --verbose-build --verify --board ${BOARD} AdvancedWebServer/AdvancedWebServer.ino
+  - arduino --verbose-build --verify --board ${BOARD} HttpBasicAuth/HttpBasicAuth.ino
+  - echo -e "travis_fold:end:sketch_test"
+
 notifications:
   email:
     on_success: change
-    on_failure: change
+    on_failure: change    
