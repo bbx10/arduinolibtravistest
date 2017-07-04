@@ -1,4 +1,8 @@
 language: c
+sudo: required
+dist: trusty
+os:
+    - linux
 env:
   - TESTCASE="1.8.3|esp8266|stable|esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
   - TESTCASE="1.8.3|esp8266|devel|esp8266com:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
@@ -40,9 +44,7 @@ before_install:
   - |
     if [[ $PLATFORM == "esp32" ]] && [[ ${RELEASE} == "devel" ]]
     then
-      wget https://bootstrap.pypa.io/get-pip.py
-      python get-pip.py
-      pip install pyserial
+      sudo pip install pyserial
       mkdir -p hardware/espressif
       cd hardware/espressif
       git clone https://github.com/espressif/arduino-esp32.git esp32
