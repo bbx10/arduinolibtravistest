@@ -44,6 +44,8 @@ before_install:
   - |
     if [[ $PLATFORM == "esp32" ]] && [[ ${RELEASE} == "devel" ]]
     then
+      wget https://bootstrap.pypa.io/get-pip.py
+      sudo python get-pip.py
       sudo pip install pyserial
       mkdir -p hardware/espressif
       cd hardware/espressif
