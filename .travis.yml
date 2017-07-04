@@ -2,7 +2,7 @@ language: c
 env:
   - TESTCASE="1.8.3|esp8266|stable|esp8266:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
   - TESTCASE="1.8.3|esp8266|devel|esp8266com:esp8266:nodemcuv2:CpuFrequency=80,FlashSize=4M3M"
-  - TESTCASE="1.8.3|esp32|devel|espressif:esp32:esp32
+  - TESTCASE="1.8.3|esp32|devel|espressif:esp32:esp32"
 before_install:
   - IFS='|' read -r -a array <<< "${TESTCASE}"
   - |
