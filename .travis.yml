@@ -28,7 +28,7 @@ script:
       esac
     done
   - cd $HOME
-  - wget -O arduino.tar.xz https://www.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
+  - wget -O arduino.tar.xz https://downloads.arduino.cc/arduino-${IDEVER}-linux64.tar.xz
   - tar xf arduino.tar.xz
   - mv arduino-${IDEVER} $HOME/arduino_ide
   - IDEDIR="${HOME}/arduino_ide"
