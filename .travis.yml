@@ -26,7 +26,6 @@ before_install:
     if [[ $PLATFORM == "esp8266" ]] && [[ ${RELEASE} == "stable" ]]
     then
       ./arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
-      ./arduino --pref "compiler.warning_level=all" --save-prefs
       ./arduino --install-boards "esp8266:esp8266"
     fi
   - |
@@ -37,20 +36,21 @@ before_install:
       git clone https://github.com/esp8266/Arduino.git esp8266
       cd esp8266/tools
       python get.py
-      cd ${IDEDIR}
-      ./arduino --pref "compiler.warning_level=all" --save-prefs
     fi
   - |
     if [[ $PLATFORM == "esp32" ]] && [[ ${RELEASE} == "devel" ]]
     then
+      wget https://bootstrap.pypa.io/get-pip.py
+      python get-pip.py
+      pip install pyserial
       mkdir -p hardware/espressif
       cd hardware/espressif
       git clone https://github.com/espressif/arduino-esp32.git esp32
       cd esp32/tools/
       python get.py
-      cd ${IDEDIR}
-      ./arduino --pref "compiler.warning_level=all" --save-prefs
     fi
+    cd ${IDEDIR}
+    ./arduino --pref "compiler.warning_level=all" --save-prefs
 install:
   - git clone https://github.com/bbx10/WebServer_tng ${IDEDIR}/portable/sketchbook/libraries/WebServer
 script:
